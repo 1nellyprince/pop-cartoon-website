@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Aside + Post System</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial;
+        background: #f2f2f2;
+    }
+
+    /* ☰ MENU */
+    .menu {
+        font-size: 28px;
+        padding: 15px;
+        cursor: pointer;
+        background: #333;
+        color: white;
+        display: inline-block;
+    }
+
+    /* ASIDE */
+    #asideBar {
+        position: fixed;
+        top: 0;
+        left: -220px;
+        width: 220px;
+        height: 100%;
+        background: #111;
+        color: white;
+        padding: 20px;
+        transition: 0.3s;
+    }
+
+    #asideBar.open {
+        left: 0;
+    }
+
+    #asideBar a {
+        display: block;
+        color: white;
+        text-decoration: none;
+        margin: 15px 0;
+    }
+
+    /* POST */
+    .container {
+        margin: 20px;
+        max-width: 450px;
+    }
+
+    .post {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px #ccc;
+    }
+
+    .actions button {
+        cursor: pointer;
+        margin-bottom: 10px;
+    }
+
+    .comment {
+        background: #eee;
+        padding: 8px;
+        border-radius: 5px;
+        margin-top: 8px;
+        font-size: 14px;
+    }
+
+    .comment small {
+        color: gray;
+        display: block;
+    }
+
+    .delete {
+        color: red;
+        cursor: pointer;
+        float: right;
+        font-size: 12px;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- ☰ -->
+<span class="menu" onclick="toggleAside()">&#9776;</span>
+
+<!-- ASIDE -->
+<aside id="asideBar">
+    <h3>MENU</h3>
+    <a href="#">Home</a>
+    <a href="#">Profile</a>
+    <a href="#">Settings</a>
+</aside>
+
+<!-- CONTENT -->
+<div class="container">
+    <div class="post">
+        <h3>My First Post</h3>
+        <p>Hello 👋 this is my first post</p>
+
+        <!-- LIKE / UNLIKE -->
+        <div class="actions">
+            <button onclick="toggleLike()">
+                ❤️ <span id="likeText">Like</span>
+                (<span id="likeCount">0</span>)
+            </button>
+        </div>
+
+        <!-- COMMENT -->
+        <input type="text" id="username" placeholder="Username"><br><br>
+        <input type="text" id="commentText" placeholder="Write a comment">
+        <button onclick="addComment()">Comment</button>
+
+        <div id="commentList"></div>
+    </div>
+</div>
+
+<script>
+    /* ASIDE */
+    function toggleAside() {
+        document.getElementById("asideBar")
+        .classList.toggle("open");
+    }
+
+    /* LIKE / UNLIKE */
+    let likes = 0;
+    let liked = false;
+
+    function toggleLike() {
+        if (!liked) {
+            likes++;
+            liked = true;
+            document.getElementById("likeText").innerText = "Unlike";
+        } else {
+            likes--;
+            liked = false;
+            document.getElementById("likeText").innerText = "Like";
+        }
+        document.getElementById("likeCount").innerText = likes;
+    }
+
+    /* COMMENT */
+    function addComment() {
+        let user = document.getElementById("username").value;
+        let text = document.getElementById("commentText").value;
+
+        if (user === "" || text === "") return;
+
+        let time = new Date().toLocaleTimeString();
+
+        let div = document.createElement("div");
+        div.className = "comment";
+        div.innerHTML = `
+            <span class="delete" onclick="this.parentElement.remove()">Delete</span>
+            <strong>${user}</strong>
+            <small>${time}</small>
+            <p>${text}</p>
+        `;
+
+        document.getElementById("commentList").appendChild(div);
+        document.getElementById("commentText").value = "";
+    }
+</script>
+
+</body>
+</html>
